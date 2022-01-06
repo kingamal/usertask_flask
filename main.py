@@ -1,14 +1,15 @@
 import requests
 
-url_users = "https://jsonplaceholder.typicode.com/users"
-url_todos = "https://jsonplaceholder.typicode.com/todos"
+
+URL_USERS = "https://jsonplaceholder.typicode.com/users"
+URL_TODOS = "https://jsonplaceholder.typicode.com/todos"
 
 
 def response(url):
     responses = requests.request("GET", url)
     responses = responses.json()
-    return print(responses)
+    return responses
 
 
-response(url_users)
-response(url_todos)
+users = response(URL_USERS)
+todos = response(URL_TODOS)

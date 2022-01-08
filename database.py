@@ -1,7 +1,6 @@
 import sqlite3
 from main import users, todos
 
-# print(users)
 
 conn = sqlite3.connect('test.db')
 cur = conn.cursor()
@@ -32,4 +31,21 @@ for i in users:
            i['address']['city'], i['address']['zipcode'], i['address']['geo']['lat'], i['address']['geo']['lng'],
            i['phone'], i['website'], i['company']['name'], i['company']['catchPhrase'], i['company']['bs'])
     cur.executemany('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (val,))
+    conn.commit()
+
+
+cur.executescript("""
+    DROP TABLE IF EXISTS todos;
+    CREATE TABLE IF NOT EXISTS todos (
+        todos_id INTEGER PRIMARY KEY ASC,
+        title varchar(250) NOT NULL,
+        completed varchar(250) NOT NULL,
+        users_id INTEGER NOT NULL,
+        FOREIGN KEY(users_id) REFERENCES users(user_id)
+    )""")
+
+val2 = ()
+for i in todos:
+    val2 = (i['id'], i['title'], i['completed'], i['userId'])
+    cur.executemany('INSERT INTO todos VALUES(?,?,?,?)', (val2,))
     conn.commit()

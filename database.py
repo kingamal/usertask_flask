@@ -1,7 +1,7 @@
 import sqlite3
 from main import users, todos
 
-print(users)
+# print(users)
 
 conn = sqlite3.connect('test.db')
 cur = conn.cursor()
@@ -26,12 +26,10 @@ cur.executescript("""
         company_bs varchar(250) NOT NULL
     )""")
 
-tup = ()
+val = ()
 for i in users:
-    tup = (i['id'], i['name'], i['username'], i['email'], i['address']['street'], i['address']['suite'],
+    val = (i['id'], i['name'], i['username'], i['email'], i['address']['street'], i['address']['suite'],
            i['address']['city'], i['address']['zipcode'], i['address']['geo']['lat'], i['address']['geo']['lng'],
            i['phone'], i['website'], i['company']['name'], i['company']['catchPhrase'], i['company']['bs'])
-
-
-cur.executemany('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', tup)
-conn.commit()
+    cur.executemany('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (val,))
+    conn.commit()

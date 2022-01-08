@@ -1,9 +1,11 @@
 import sqlite3
 from main import users, todos
+import csv
 
 
 conn = sqlite3.connect('test.db')
 cur = conn.cursor()
+conn.row_factory = sqlite3.Row
 
 cur.executescript("""
     DROP TABLE IF EXISTS users;
@@ -49,3 +51,20 @@ for i in todos:
     val2 = (i['id'], i['title'], i['completed'], i['userId'])
     cur.executemany('INSERT INTO todos VALUES(?,?,?,?)', (val2,))
     conn.commit()
+
+
+def export_to_csv():
+    cur.execute(
+        """
+        SELECT name, address_city, title, completed FROM users, todos
+        WHERE users.user_id=todos.users_id
+    """)
+    user_task = cur.fetchall()
+    with open("file.csv", "w", newline="") as fp:
+        fpwriter = csv.writer(fp)
+        fpwriter.writerow(["name", "city", "title", "completed"])
+        for task in user_task:
+            fpwriter.writerow(task)
+
+
+export_to_csv()
